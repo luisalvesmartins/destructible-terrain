@@ -14,6 +14,7 @@
 </head>
 <body>
     Rectangles: <span id=nRect></span><br>
+    Smaller Area Size: <input id=minArea value=4 size=2><br>
     <canvas id=myCanvas width=800 height=800></canvas>
 
 <script>
@@ -28,7 +29,9 @@ document.all("myCanvas").addEventListener("mouseup",
         var x=mouse.clientX-cr.left;
         var y=mouse.clientY-cr.top;
 
-        t.hit( new Circle(x,y,100) );
+        var minArea=document.all("minArea").value;
+
+        t.hit( new Circle(x,y,100), minArea);
         drawTerrain(t,ctx);
     }
 );

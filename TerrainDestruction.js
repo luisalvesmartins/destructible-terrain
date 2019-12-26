@@ -61,7 +61,7 @@ class Terrain{
      * 
      * @param {Circle} C 
      */
-    hit(C){
+    hit(C,minArea){
         var n=0;
     
         while(n<this.rectangles.length)
@@ -85,7 +85,7 @@ class Terrain{
         {
             var b=this.rectangles[n];
 
-            if (b.intersect && b.area>4){
+            if (b.intersect && b.area>minArea){
                 b.intersect=false;
                 var bw2=Math.floor(b.w/2);
                 var bh2=Math.floor(b.h/2);
