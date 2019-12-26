@@ -102,15 +102,18 @@ class Terrain{
 
             if (b.intersect && b.area>minArea){
                 b.intersect=false;
+
                 var bw2=b.w/2;
                 var bh2=b.h/2;
-                var rbw2=b.w-bw2;
-                var rbh2=b.h-bh2;
 
-                var b1=new Box(b.x,b.y,bw2,bh2);
-                var b2=new Box(b.x+bw2,b.y,rbw2,bh2);
-                var b3=new Box(b.x,b.y+bh2,bw2,rbh2);
-                var b4=new Box(b.x+bw2,b.y+bh2,rbw2,rbh2);
+                //Left Top
+                var b1=new Box(b.x,    b.y,    bw2,bh2);
+                //Right Top
+                var b2=new Box(b.x+bw2,b.y,    bw2,bh2);
+                //Left Bottom
+                var b3=new Box(b.x,    b.y+bh2,bw2,bh2);
+                //Right Bottom
+                var b4=new Box(b.x+bw2,b.y+bh2,bw2,bh2);
 
                 b1.intersect=this.rectangleCircle(b1,C);
                 b2.intersect=this.rectangleCircle(b2,C);
