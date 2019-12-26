@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="TerrainDestruction.js"></script>
+    <script src="phaser.min.js"></script>
+    <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    </style>
+</head>
+<body>
+    Rectangles: <span id=nRect></span><br>
+    Smaller Area Size: <input id=minArea value=1 size=2><br>
+    <div id=phaser-example></div>
+    <canvas id=myCanvas width=800 height=800></canvas>
+<script>
+'use strict'
+
+var sizeExplosion=50;
+
+var config = {
+    type: Phaser.AUTO,
+    parent: 'phaser-example',
+    width: 400,
+    height: 300,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 200 }
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create
+    },
+    zoom:2,
+    backgroundColor:"#4488AA"
+};
+
+var game = new Phaser.Game(config);
+
+var terrain;
+var bomb;
+var terrainGroup;
+var gameScene;
+
+function preload(){
+    this.load.image('bomb', 'images/bomb.png');
+}
+
+function create ()
+{
+    gameScene=this;
+    terrain=new Terrain(0,100,400,200);
+
+    terrainGroup = this.physics.add.staticGroup();
+
+    drawTerrain();
+
+     bomb = this.physics.add.sprite(200, 0, 'bomb');
+     Resetbomb(bomb);
+
+     this.physics.add.collider(bomb, terrainGroup, explode);
+}
+
+function Resetbomb(bomb){
+    bomb.x=Math.random()*400;
+    bomb.y=0;
+    bomb.setVelocityX(Math.random()*200-100)
+    bomb.setVelocityY(0)
+    bomb.setCollideWorldBounds();
+    bomb.setBounceX(1);
+    bomb.setBounceY(1);
+}
+
+function explode(bomb){
+    var minArea=document.all("minArea").value;
+    terrain.hit( new Circle(bomb.x,bomb.y,sizeExplosion), minArea)
+    
+    drawTerrain();
+
+    Resetbomb(bomb);
+}
+
+function drawTerrain(){
+    document.all("nRect").innerText=terrain.rectangles.length;
+
+    terrainGroup.clear(true,true);
+    if (terrain.rectangles.length==0){
+        terrain=new Terrain(0,100,400,200);
+        console.log("clear")
+    }
+
+    var n=0;
+    while(n<terrain.rectangles.length)
+    {
+        var b=terrain.rectangles[n];
+        var r = gameScene.add.rectangle(b.x+b.w/2, b.y+b.h/2, b.w, b.h, 0x339933).setStrokeStyle(1, 0x226622);
+        terrainGroup.add(r);
+
+        n++;
+    }
+
+}
+
+</script>
+</body>
+</html>

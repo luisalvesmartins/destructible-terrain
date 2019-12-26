@@ -58,10 +58,23 @@ class Terrain{
     //#endregion
 
     /**
-     * 
+     * Add rectangle to the list
+     * @param {rect} rect
+     */
+    addRectangle(rect){
+        if (rect.area>this.minArea)
+        this.rectangles.push(rect);
+    }
+
+    /**
+     * Main function, performs the hit
+     * Rectangles need to be bigger than minArea
      * @param {Circle} C 
+     * @param {number} minArea 
      */
     hit(C,minArea){
+        this.minArea=minArea;
+    
         var n=0;
     
         while(n<this.rectangles.length)
@@ -77,6 +90,8 @@ class Terrain{
             n++;
         }
 
+        if (this.rectangles.length==0)
+            return;
         n=0;
         var b=this.rectangles[0];
         b.intersect=this.rectangleCircle(b,C);
@@ -87,8 +102,8 @@ class Terrain{
 
             if (b.intersect && b.area>minArea){
                 b.intersect=false;
-                var bw2=Math.floor(b.w/2);
-                var bh2=Math.floor(b.h/2);
+                var bw2=b.w/2;
+                var bh2=b.h/2;
                 var rbw2=b.w-bw2;
                 var rbh2=b.h-bh2;
 
@@ -111,26 +126,26 @@ class Terrain{
                     var b1=new Box(b.x,b.y,b.w,bh2);
                     b1.inside=false;
                     b1.intersect=false;
-                    this.rectangles.push(b1);
+                    this.addRectangle(b1);
                 }
                 else{
-                    if (!b1.inside)           
-                    this.rectangles.push(b1);
+                    if (!b1.inside)
+                        this.addRectangle(b1);
                     if (!b2.inside)           
-                    this.rectangles.push(b2);
+                        this.addRectangle(b2);
                 }
                 if (!b3.inside && !b4.inside && !b3.intersect && !b4.intersect)
                 {
                     var b1=new Box(b.x,b.y+bh2,b.w,bh2);
                     b1.inside=false;
                     b1.intersect=false;
-                    this.rectangles.push(b1);
+                    this.addRectangle(b1);
                 }
                 else{
                     if (!b3.inside)           
-                        this.rectangles.push(b3);
+                        this.addRectangle(b3);
                     if (!b4.inside)           
-                        this.rectangles.push(b4);
+                        this.addRectangle(b4);
                 }
 
                 this.rectangles.splice(n,1);
@@ -191,7 +206,7 @@ class Terrain{
         })
 
         n=0;
-        while(n<Terrain.length-1)
+        while(n<this.rectangles.length-1)
         {
             b=this.rectangles[n];
             b2=this.rectangles[n+1];
